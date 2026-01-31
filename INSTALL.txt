@@ -1,0 +1,73 @@
+================================================================================
+                         CPU MONITOR WIDGET
+                    Installation Instructions
+================================================================================
+
+QUICK INSTALL (3 steps)
+-----------------------
+
+1. Install Python dependency:
+
+   pip install psutil
+
+   OR using system package manager:
+
+   paru -S python-psutil
+   sudo pacman -S python-psutil
+
+2. Install the widget:
+
+   plasmapkg2 --install cpu-monitor.plasmoid
+
+3. Add to your desktop:
+
+   - Right-click on desktop or panel
+   - Select "Add Widgets..."
+   - Search for "CPU Monitor"
+   - Drag to desired location
+
+DONE! Your widget is ready to use.
+
+================================================================================
+
+REQUIREMENTS
+------------
+- KDE Plasma 6.0 or higher
+- Python 3.x
+- psutil Python library
+
+UPDATING
+--------
+To update an existing installation:
+
+plasmapkg2 --upgrade cpu-monitor.plasmoid
+
+UNINSTALLING
+------------
+To remove the widget:
+
+plasmapkg2 --remove com.plasmawidget.cpumonitor
+
+TROUBLESHOOTING
+---------------
+
+Widget shows zeros or no data:
+  → Check psutil is installed: python3 -c "import psutil"
+
+Widget not in Add Widgets menu:
+  → Restart Plasma: killall plasmashell && plasmashell &
+  → Or log out and log back in
+
+DOCUMENTATION
+-------------
+- DESCRIPTION.md - User-friendly overview
+- README.md      - Complete technical documentation
+- BUILD.md       - Build and development guide
+
+SUPPORT
+-------
+For issues or questions, contact Alan or check the project repository.
+
+Enjoy your new CPU monitor!
+
+================================================================================

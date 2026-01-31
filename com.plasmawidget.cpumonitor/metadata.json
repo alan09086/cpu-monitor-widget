@@ -1,0 +1,22 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Alan"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Displays CPU usage, frequency, and top processes",
+        "Icon": "cpu",
+        "Id": "com.plasmawidget.cpumonitor",
+        "Name": "CPU Monitor",
+        "Version": "1.0",
+        "Website": "",
+        "EnabledByDefault": true
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/main.qml",
+    "X-KDE-PluginInfo-Version": "1.0"
+}
