@@ -17,4 +17,6 @@ Files:
 - Documentation: README.md, DESCRIPTION.md, BUILD.md, INSTALL.txt
 - Source backup: source-backup/
 
-Git Hash: (not in git yet)
+Git Repository: ~/projects/cpu-monitor/.git
+Git Branch: main
+Git Commit: 4b2cccb (Initial commit: CPU Monitor Widget v1.0)
