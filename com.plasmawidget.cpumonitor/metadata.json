@@ -10,7 +10,7 @@
         "Icon": "cpu",
         "Id": "com.plasmawidget.cpumonitor",
         "Name": "CPU Monitor",
-        "Version": "1.0",
+        "Version": "1.2",
         "Website": "",
         "EnabledByDefault": true
     },
@@ -18,5 +18,5 @@
     "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-API": "declarativeappletscript",
     "X-Plasma-MainScript": "ui/main.qml",
-    "X-KDE-PluginInfo-Version": "1.0"
+    "X-KDE-PluginInfo-Version": "1.2"
 }

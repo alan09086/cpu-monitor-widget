@@ -4,23 +4,16 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.plasma5support as P5Support
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
+import org.kde.ksysguard.sensors as Sensors
 
 PlasmoidItem {
     id: root
 
-    property var cpuData: ({
-        cpu_percent: 0,
-        cpu_freq: 0,
-        cpu_count: 0,
-        mem_total_gb: 0,
-        mem_used_gb: 0,
-        mem_percent: 0,
-        top_processes: []
-    })
+    property var topProcesses: []
 
     preferredRepresentation: fullRepresentation
 
-    // Function to get color based on CPU usage (for text)
+    // Function to get color based on usage (for text)
     function getUsageColor(percent) {
         if (percent < 50) {
             return "#00FF41"  // Bright Matrix green
@@ -44,7 +37,49 @@ PlasmoidItem {
         return colors[index % colors.length]
     }
 
-    // Use Plasma5Support for running commands
+    // CPU Usage sensor (built-in, no external process)
+    Sensors.Sensor {
+        id: cpuUsageSensor
+        sensorId: "cpu/all/usage"
+        updateRateLimit: 2000
+    }
+
+    // CPU Frequency sensor
+    Sensors.Sensor {
+        id: cpuFreqSensor
+        sensorId: "cpu/all/averageFrequency"
+        updateRateLimit: 2000
+    }
+
+    // CPU Core count sensor
+    Sensors.Sensor {
+        id: cpuCountSensor
+        sensorId: "cpu/all/coreCount"
+        updateRateLimit: 60000  // Rarely changes
+    }
+
+    // Memory total sensor
+    Sensors.Sensor {
+        id: memTotalSensor
+        sensorId: "memory/physical/total"
+        updateRateLimit: 60000  // Rarely changes
+    }
+
+    // Memory used sensor
+    Sensors.Sensor {
+        id: memUsedSensor
+        sensorId: "memory/physical/used"
+        updateRateLimit: 2000
+    }
+
+    // Memory percent sensor
+    Sensors.Sensor {
+        id: memPercentSensor
+        sensorId: "memory/physical/usedPercent"
+        updateRateLimit: 2000
+    }
+
+    // Command source for top processes only
     P5Support.DataSource {
         id: commandSource
         engine: "executable"
@@ -55,22 +90,23 @@ PlasmoidItem {
             disconnectSource(source)
             if (data["exit code"] === 0) {
                 try {
-                    cpuData = JSON.parse(data.stdout)
+                    topProcesses = JSON.parse(data.stdout)
                 } catch (e) {
-                    console.log("Error parsing CPU data:", e)
+                    console.log("Error parsing process data:", e)
                 }
             }
         }
     }
 
+    // Timer for top processes (every 5 seconds)
     Timer {
-        interval: 2000
+        interval: 5000
         running: true
         repeat: true
         triggeredOnStart: true
 
         onTriggered: {
-            var scriptPath = Qt.resolvedUrl("../code/cpuinfo.py").toString().replace("file://", "")
+            var scriptPath = Qt.resolvedUrl("../code/topprocs.py").toString().replace("file://", "")
             commandSource.connectSource("python3 " + scriptPath)
         }
     }
@@ -114,16 +150,16 @@ PlasmoidItem {
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        width: parent.width * (cpuData.cpu_percent / 100)
+                        width: parent.width * ((cpuUsageSensor.value || 0) / 100)
                         color: root.getBarColor(0)
                         radius: 3
                     }
                 }
 
                 PlasmaComponents.Label {
-                    text: cpuData.cpu_percent.toFixed(1) + "%"
+                    text: (cpuUsageSensor.value || 0).toFixed(1) + "%"
                     font.bold: true
-                    color: root.getUsageColor(cpuData.cpu_percent)
+                    color: root.getUsageColor(cpuUsageSensor.value || 0)
                     Layout.preferredWidth: Kirigami.Units.gridUnit * 3
                 }
             }
@@ -137,13 +173,13 @@ PlasmoidItem {
                 }
 
                 PlasmaComponents.Label {
-                    text: (cpuData.cpu_freq / 1000).toFixed(2) + " GHz"
+                    text: ((cpuFreqSensor.value || 0) / 1000000).toFixed(2) + " GHz"
                 }
 
                 Item { Layout.fillWidth: true }
 
                 PlasmaComponents.Label {
-                    text: "Cores: " + cpuData.cpu_count
+                    text: "Cores: " + (cpuCountSensor.value || 0)
                 }
             }
 
@@ -172,21 +208,21 @@ PlasmoidItem {
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        width: parent.width * (cpuData.mem_percent / 100)
+                        width: parent.width * ((memPercentSensor.value || 0) / 100)
                         color: root.getBarColor(5)
                         radius: 3
                     }
                 }
 
                 PlasmaComponents.Label {
-                    text: cpuData.mem_used_gb.toFixed(1) + " / " + cpuData.mem_total_gb.toFixed(1) + " GB"
+                    text: ((memUsedSensor.value || 0) / 1073741824).toFixed(1) + " / " + ((memTotalSensor.value || 0) / 1073741824).toFixed(1) + " GB"
                     font.bold: true
-                    color: root.getUsageColor(cpuData.mem_percent)
+                    color: root.getUsageColor(memPercentSensor.value || 0)
                     Layout.preferredWidth: Kirigami.Units.gridUnit * 6
                 }
             }
 
-            // Top 5 Processes (moved inside same layout)
+            // Top 5 Processes
             PlasmaComponents.Label {
                 text: "Top 5 Processes"
                 font.bold: true
@@ -194,7 +230,7 @@ PlasmoidItem {
             }
 
             Repeater {
-                model: cpuData.top_processes || []
+                model: topProcesses || []
 
                 RowLayout {
                     Layout.fillWidth: true

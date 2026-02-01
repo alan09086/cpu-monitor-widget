@@ -1,6 +1,6 @@
 CPU Monitor Widget
-Version: 1.0
-Release Date: 2026-01-31
+Version: 1.2
+Release Date: 2026-02-01
 Author: Alan
 
 Build: cpu-monitor.plasmoid
@@ -8,8 +8,12 @@ Widget ID: com.plasmawidget.cpumonitor
 Target Platform: KDE Plasma 6.0+
 
 Dependencies:
-- Python 3.x
-- psutil
+- Python 3.x (for top processes only)
+
+Changes in 1.2:
+- Uses ksysguard sensors for CPU/memory stats (lower CPU overhead)
+- Reads /proc directly instead of psutil (no external dependency)
+- Separate lightweight script for top processes
 
 Files:
 - cpu-monitor.plasmoid (installable package)
@@ -17,6 +21,5 @@ Files:
 - Documentation: README.md, DESCRIPTION.md, BUILD.md, INSTALL.txt
 - Source backup: source-backup/
 
-Git Repository: ~/projects/cpu-monitor/.git
+Git Repository: https://github.com/alan09086/cpu-monitor-widget
 Git Branch: main
-Git Commit: 4b2cccb (Initial commit: CPU Monitor Widget v1.0)
