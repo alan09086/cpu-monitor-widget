@@ -63,8 +63,10 @@ def main():
                 'mem_mb': round(mem_mb, 1)
             })
 
-    # Sort and return top 5
-    top_processes = sorted(process_data, key=lambda x: x['cpu_percent'], reverse=True)[:5]
+    # Filter out this script and sort by CPU usage
+    excluded = {'python3', 'python', 'topprocs.py'}
+    filtered = [p for p in process_data if p['name'] not in excluded]
+    top_processes = sorted(filtered, key=lambda x: x['cpu_percent'], reverse=True)[:5]
     print(json.dumps(top_processes))
 
 if __name__ == '__main__':
