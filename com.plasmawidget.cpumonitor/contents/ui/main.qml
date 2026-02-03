@@ -42,13 +42,15 @@ PlasmoidItem {
         id: cpuUsageSensor
         sensorId: "cpu/all/usage"
         updateRateLimit: 2000
+        enabled: root.visible
     }
 
-    // CPU Frequency sensor
+    // CPU Frequency sensor (returns MHz, unit 302)
     Sensors.Sensor {
         id: cpuFreqSensor
         sensorId: "cpu/all/averageFrequency"
         updateRateLimit: 2000
+        enabled: root.visible
     }
 
     // CPU Core count sensor
@@ -56,6 +58,7 @@ PlasmoidItem {
         id: cpuCountSensor
         sensorId: "cpu/all/coreCount"
         updateRateLimit: 60000  // Rarely changes
+        enabled: root.visible
     }
 
     // Memory total sensor
@@ -63,6 +66,7 @@ PlasmoidItem {
         id: memTotalSensor
         sensorId: "memory/physical/total"
         updateRateLimit: 60000  // Rarely changes
+        enabled: root.visible
     }
 
     // Memory used sensor
@@ -70,6 +74,7 @@ PlasmoidItem {
         id: memUsedSensor
         sensorId: "memory/physical/used"
         updateRateLimit: 2000
+        enabled: root.visible
     }
 
     // Memory percent sensor
@@ -77,6 +82,7 @@ PlasmoidItem {
         id: memPercentSensor
         sensorId: "memory/physical/usedPercent"
         updateRateLimit: 2000
+        enabled: root.visible
     }
 
     // Command source for top processes only
@@ -173,7 +179,10 @@ PlasmoidItem {
                 }
 
                 PlasmaComponents.Label {
-                    text: ((cpuFreqSensor.value || 0) / 1000000).toFixed(2) + " GHz"
+                    // Sensor returns MHz (unit 302), divide by 1000 for GHz
+                    text: cpuFreqSensor.value !== undefined
+                          ? (cpuFreqSensor.value / 1000).toFixed(2) + " GHz"
+                          : "N/A"
                 }
 
                 Item { Layout.fillWidth: true }

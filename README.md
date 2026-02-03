@@ -259,6 +259,12 @@ Created by Alan. Free to use and modify.
 
 ## Changelog
 
+### Version 1.3 (2026-02-02)
+- **Fix CPU frequency display**: Was showing 0.00 GHz due to incorrect unit conversion
+  - Sensor returns MHz (unit 302), now correctly dividing by 1000 for GHz
+- **Performance improvement**: Added `enabled` binding to sensors (reduces overhead when widget hidden)
+- **Better error handling**: Graceful handling of undefined sensor values
+
 ### Version 1.2 (2026-02-01)
 - **Performance overhaul**: Switched to ksysguard sensors for CPU/memory stats
 - **Removed psutil dependency**: Now reads `/proc` directly for top processes

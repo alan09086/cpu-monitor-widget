@@ -1,6 +1,6 @@
 CPU Monitor Widget
-Version: 1.2
-Release Date: 2026-02-01
+Version: 1.3
+Release Date: 2026-02-02
 Author: Alan
 
 Build: cpu-monitor.plasmoid
@@ -9,6 +9,12 @@ Target Platform: KDE Plasma 6.0+
 
 Dependencies:
 - Python 3.x (for top processes only)
+
+Changes in 1.3:
+- Fix CPU frequency display (was showing 0 due to incorrect unit conversion)
+- Sensor returns MHz, now correctly dividing by 1000 for GHz display
+- Add enabled binding to sensors (reduces overhead when widget hidden)
+- Improved error handling for undefined sensor values
 
 Changes in 1.2:
 - Uses ksysguard sensors for CPU/memory stats (lower CPU overhead)
